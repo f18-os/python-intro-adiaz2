@@ -1,14 +1,14 @@
 #! /usr/bin/env python3
 
 import os, sys, time, re
+print("Welcome to the Alex-Shell, enter 'exit' to exit")
 while 1:
     print(">>>", end='')
     command = input("")
     if command == "exit":
-        exit()
+        sys.exit(1)
     pid = os.getpid()
     rc = os.fork()
-    print(rc)
     if rc < 0:
         os.write(2, ("fork failed, returning %d\n" % rc).encode())
         sys.exit(1)
@@ -17,7 +17,7 @@ while 1:
                      (os.getpid(), pid)).encode())
         args = command.split(' ')
         os.close(1)                 # redirect child's stdout
-        sys.stdout = open("p4-output.txt", "w")
+        sys.stdout = open("output.txt", "w")
         fd = sys.stdout.fileno() # os.open("p4-output.txt", os.O_CREAT)
         os.set_inheritable(fd, True)
         os.write(2, ("Child: opened fd=%d for writing\n" % fd).encode())
